@@ -1,0 +1,8 @@
+*.env
+.env
+data/CLE-v-CHW-12-Jul-2022-o10003.json
+data/offset=10067.json
+data/offset=10326.json
+data/offset=10345.json
+data/offset=10360.json
+data/offset=10657.json
