@@ -36,7 +36,7 @@ SCHEMAS = ["baseball_stagingus", "ncaab_stagingus"]
 # Schemas where the encodings table resides for each sport_env schema
 ENCODINGS_TABLE_SCHEMAS = {
     'baseball_stagingus': 'mlb_sit_views',
-    'ncaab_stagingus': 'ncaab_stagingus',
+    'ncaab_stagingus': 'ncaab_sit_views',
 }
 
 def query_execution(query: str) -> dict:

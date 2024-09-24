@@ -1,0 +1,34 @@
+name: Update AWS Glue Job
+
+on:
+  push:
+    paths:
+      - './decode_suspension_reasons.py'
+    branches:
+      - main
+
+jobs:
+  update-glue-job:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up AWS CLI
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+
+    - name: Update Glue Job Script`
+      run: |
+        JOB_NAME="MLB - Decode Suspension Reasons"
+        SCRIPT_PATH="s3://asf-athena/suspension_reason_decoding/"
+
+        # Upload the script to S3 (Glue expects the script to be in S3)
+        aws s3 cp decode_suspension_reasons.py $SCRIPT_PATH
+
+        # Update the Glue job with the new script location
+        JOB_DEFINITION=$(aws glue get-job --job-name $JOB_NAME --query "Job")
+        UPDATED_JOB_DEFINITION=$(echo $JOB_DEFINITION | jq --arg scriptPath $SCRIPT_PATH '.Command.ScriptLocation = $scriptPath')
+        aws glue update-job --job-name $JOB_NAME --job-update "$UPDATED_JOB_DEFINITION"
